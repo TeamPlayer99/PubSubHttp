@@ -42,7 +42,8 @@ namespace PubSubApiServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //disable https
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -24,6 +24,7 @@ namespace PubSubApiServer.Controllers
             _subscribeContext = subscribeContext;
         }
 
+        //HTTP POST /publish/{TOPIC}
         [HttpPost("{topic}")]
         public async Task<ActionResult<Publish>> PostPublish(object publication, string topic)
         {
@@ -33,10 +34,12 @@ namespace PubSubApiServer.Controllers
             Event @event = JsonConvert.DeserializeObject<Event>(eventStr);
             Publish publish = JsonConvert.DeserializeObject<Publish>(eventStr);
 
+            //retrive all subscribers for topic
             List<Subscribe> subscribers = _subscribeContext.Subscriptions
                 .Where(t => t.Topic.Title == topicToLower)
                 .ToList<Subscribe>();
 
+            //for each subscriber post message to specified url/event
             foreach(var s in subscribers)
             {
                 await testHttpClientAsync(@event, s.Url);

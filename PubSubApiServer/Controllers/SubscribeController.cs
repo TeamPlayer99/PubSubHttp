@@ -22,15 +22,20 @@ namespace PubSubApiServer.Controllers
             _topicContext = topicContext;
         }
 
+        //HTTP POST /subscribe/{TOPIC}
         [HttpPost("{topic}")]
         public async Task<ActionResult<Subscribe>> Subscribe(object subscription, string topic)
         {
+            //deserialize subscription data
             Subscribe subscribe = JsonConvert.DeserializeObject<Subscribe>(subscription.ToString());
 
+
+            //get all topics in system
             Topic topicEntity = _topicContext.Topics
                 .Where(t => t.Title == topic.ToLower())
                 .SingleOrDefault();
 
+            //If topic exists add subscriber else create new topic and add subscriber
             if(topicEntity != null)
             {
                 topicEntity.Subscribers.Add(subscribe);
@@ -56,9 +61,6 @@ namespace PubSubApiServer.Controllers
             _subscribeContext.Add(subscribe);
 
             await _subscribeContext.SaveChangesAsync();
-            
-
-            var s = await _subscribeContext.Subscriptions.ToListAsync<Subscribe>();
 
             return Ok();
         }
