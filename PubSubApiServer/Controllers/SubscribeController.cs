@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PubSubApiServer.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace PubSubApiServer.Controllers
 {
@@ -39,13 +40,25 @@ namespace PubSubApiServer.Controllers
                 topicEntity = new Topic
                 {
                     Title = topic.ToLower(),
-                    Subscribers = new List<Subscribe>() { subscribe }
+                    Subscribers = new List<Subscribe>()
                 };
 
                 _topicContext.Add(topicEntity);
+
+                subscribe.Topic = topicEntity;
+                subscribe.TopicId = topicEntity.TopicId;
+
+                topicEntity.Subscribers.Add(subscribe);
             }
 
             await _topicContext.SaveChangesAsync();
+
+            _subscribeContext.Add(subscribe);
+
+            await _subscribeContext.SaveChangesAsync();
+            
+
+            var s = await _subscribeContext.Subscriptions.ToListAsync<Subscribe>();
 
             return Ok();
         }

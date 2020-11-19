@@ -30,6 +30,7 @@ namespace PubSubApiServer
             services.AddDbContext<PublishContext>(opt => opt.UseInMemoryDatabase("pubsubdb"));
             services.AddDbContext<SubscribeContext>(opt => opt.UseInMemoryDatabase("pubsubdb"));
             services.AddDbContext<TopicContext>(opt => opt.UseInMemoryDatabase("pubsubdb"));
+            services.AddDbContext<EventContext>(opt => opt.UseInMemoryDatabase("pubsubdb"));
             services.AddControllers();
         }
 
